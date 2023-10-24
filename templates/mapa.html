@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapa con Autocompletado</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body {
+            background-color: #337A99;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            
+        }
+        #search-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 800px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #search-box {
+            display: flex;
+            align-items: center;
+        }
+        #search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #loading-bar {
+            width: 30px;
+            height: 30px;
+            background-color: #68FF00;
+            border-radius: 50%;
+            display: none;
+        }
+        #title {
+            display: flex;
+            align-items: center;
+        }
+        #title img {
+            width: 40px; /* Tamaño deseado para el logotipo */
+            margin-right: 10px; /* Espacio entre la imagen y el título */
+        }
+        #loading-bar::before,
+        #loading-bar::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, #007BFF 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: loading 2s linear infinite;
+            border-radius: 50%;
+        }
+
+        #loading-bar::before {
+            left: -50%;
+        }
+
+        #loading-bar::after {
+            left: 50%;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <div id="title">
+            <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" />
+            <h1>Madridalfresco</h1>
+        </div>
+        <div id="search-box">
+            <input type="text" id="street-input" placeholder="Introduce una calle" />
+            <div id="autocomplete-results"></div>
+        </div>
+        <div id="loading-bar"></div>
+    </div>
+    <div id="map" style="height: 70vh; width: 80%; max-width: 800px;"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='javascripts/mapaScript.js') }}"></script>
+    <div id="local-url"></div>
+</body>
+</html>

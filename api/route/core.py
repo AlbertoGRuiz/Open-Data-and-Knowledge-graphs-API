@@ -19,9 +19,8 @@ def completar_distrito(filtro, result):
             WHERE {{
                 ?dist rdf:type madridonc:Distrito.
                 ?dist madridonc:nombreDistrito ?nombre.
-                FILTER(CONTAINS(LCASE(?nombre), "{}")).
             }}
-    """.format(str(filtro))
+    """
 
     params = {
         "query": query

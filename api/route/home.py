@@ -3,12 +3,14 @@ from api.route import core
 from flask import Blueprint, render_template, request
 from flasgger import swag_from
 from http import HTTPStatus
+from unidecode import unidecode
 
 from api.schema.distrito_schema import DistritoSchema
 from api.schema.locales_schema import LocalesSchema
 
 home_api = Blueprint('api', __name__)
 map = Blueprint('/', __name__)
+DISTRITOS = core.completar_distrito("", {"nombres": []})
 
 
 @map.route('/')
@@ -55,7 +57,15 @@ def autocomplete_distrito(filtro):
 
         result = {"nombres": []}
 
-        result = core.completar_distrito(filtro, result)
+        if filtro == 'default':
+            for distrito in DISTRITOS['nombres']:
+                result['nombres'].append(distrito)
+            return DistritoSchema().dump(result), 200
+
+        for distrito in DISTRITOS['nombres']:
+            if str(distrito.lower()).startswith(filtro.lower()) or unidecode(distrito.lower()).startswith(
+                    filtro.lower()):
+                result['nombres'].append(distrito)
 
         return DistritoSchema().dump(result), 200
     except Exception as e:

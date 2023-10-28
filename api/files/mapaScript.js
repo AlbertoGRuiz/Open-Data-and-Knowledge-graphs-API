@@ -13,22 +13,13 @@ $(document).ready(function() {
     // Array para almacenar las coordenadas de los marcadores
     var markerCoords = [];
 
-    // Función de autocompletado
-    $('#street-input').on('input', function() {
-        var inputText = $(this).val().toLowerCase();
+    // Llamar a la función con "default" al cargar la página
+    realizarAutocompletado("default");
 
-        var autocompleteResults = $('#autocomplete-select');
-            autocompleteResults.empty();
-            autocompleteResults.hide();
-        if (inputText.trim() === "") {
-            return;
-        }
-
+    function realizarAutocompletado(inputText) {
         // Hacer una solicitud al servidor para obtener resultados
-        var loadingBar = $('#loading-bar');
-        loadingBar.css('display', 'block');
         $.ajax({
-            url: '/api/search/distrito/' + inputText, 
+            url: '/api/search/distrito/' + inputText,
             type: 'GET',
             dataType: 'json', // Especifica el tipo de datos como JSON
             success: function(data) {
@@ -40,18 +31,18 @@ $(document).ready(function() {
                 option.val('Selecciona un distrito');
                 option.text('Selecciona un distrito');
                 select.append(option);
-            
+
                 // Recorrer los nombres devueltos por el servidor y mostrarlos
                 data.nombres.forEach(function(result) {
                     // Crear un nuevo elemento option
                     var option = $('<option></option>');
                     option.val(result);
                     option.text(result);
-            
+
                     // Añadir el elemento option al elemento select
                     select.append(option);
                 });
-            
+
                 // Establecer el HTML de autocompleteResults en el HTML del elemento select
                 var autocompleteResults = $('#autocomplete-select');
                 autocompleteResults.empty();
@@ -66,6 +57,21 @@ $(document).ready(function() {
                 autocompleteResults.empty();
             }
         });
+    }
+
+    // Función de autocompletado
+    $('#street-input').on('input', function() {
+        var inputText = $(this).val().toLowerCase();
+
+        var autocompleteResults = $('#autocomplete-select');
+            autocompleteResults.empty();
+            autocompleteResults.hide();
+        if (inputText.trim() === "") {
+            realizarAutocompletado("default");
+        } else{
+            realizarAutocompletado(inputText);
+        }
+
     });
 
     // Manejar clic en resultado de autocompletado
@@ -142,7 +148,7 @@ $(document).ready(function() {
                         $('#correct-bar').css('display', 'none');
                     }, 5000);
                 }, 2000);
-                
+
             },
             error: function() {
                 // Borrar marcadores anteriores

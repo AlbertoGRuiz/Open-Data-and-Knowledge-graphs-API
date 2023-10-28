@@ -25,12 +25,7 @@ $(document).ready(function() {
             success: function(data) {
 
                 // Crear un nuevo elemento select
-                console.log(data)
-                var select = $('<select class="autocomplete-select"></select>');
-                var option = $('<option></option>');
-                option.val('Selecciona un distrito');
-                option.text('Selecciona un distrito');
-                select.append(option);
+                var select = $('#autocomplete');
 
                 // Recorrer los nombres devueltos por el servidor y mostrarlos
                 data.nombres.forEach(function(result) {
@@ -42,19 +37,13 @@ $(document).ready(function() {
                     // Añadir el elemento option al elemento select
                     select.append(option);
                 });
-
-                // Establecer el HTML de autocompleteResults en el HTML del elemento select
-                var autocompleteResults = $('#autocomplete-select');
-                autocompleteResults.empty();
-                autocompleteResults.append(select);
-                autocompleteResults.show();
-                $('#loading-bar').css('display', 'none');
             },
             error: function() {
-                $('#loading-bar').css('display', 'none');
                 console.error('Error en la solicitud AJAX');
-                var autocompleteResults = $('#autocomplete-select');
-                autocompleteResults.empty();
+                var select = $('#autocomplete')[0];
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
             }
         });
     }
@@ -63,9 +52,10 @@ $(document).ready(function() {
     $('#street-input').on('input', function() {
         var inputText = $(this).val().toLowerCase();
 
-        var autocompleteResults = $('#autocomplete-select');
-            autocompleteResults.empty();
-            autocompleteResults.hide();
+        var select = $('#autocomplete')[0];
+        while (select.options.length > 1) {
+            select.remove(1);
+        }
         if (inputText.trim() === "") {
             realizarAutocompletado("default");
         } else{

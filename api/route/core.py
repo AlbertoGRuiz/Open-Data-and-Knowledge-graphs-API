@@ -76,13 +76,19 @@ def buscar_locales(filtro, result):
 
         for item in data['results']['bindings']:
             latitud, longitud = utm_to_latlon(item['coordX']['value'], item['coordY']['value'])
+            if 'ã‘' in item['rotulo']['value']:
+                rotulo = item['rotulo']['value'].replace('ã‘','ñ')
+            elif 'Ã‘' in item['rotulo']['value']:
+                rotulo = item['rotulo']['value'].replace('Ã‘','Ñ')
+            else:
+                rotulo = item['rotulo']['value']
             local = {
                 "local": item['local']['value'],
                 "lat": str(latitud),
                 "long": str(longitud),
                 "horaCierre": item['horaCierre']['value'],
                 "horaApertura": item['horaApertura']['value'],
-                "rotulo": item['rotulo']['value'],
+                "rotulo": rotulo,
                 "situacion": item['situacion']['value'],
                 "mesas": item['mesas']['value'],
                 "sillas": item['sillas']['value'],

@@ -60,3 +60,4 @@ To see the map you must access this URL: http://127.0.0.1:5000.
 
 ## Warnings
 To use the API correctly, first of all you must configure the rdf link in the endpoint of helios and then just deploy the helios' API.
+For Helios, you must use Java 21.0.1 due to codification problems.

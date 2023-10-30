@@ -10,7 +10,7 @@ from api.schema.locales_schema import LocalesSchema
 
 home_api = Blueprint('api', __name__)
 map = Blueprint('/', __name__)
-DISTRITOS = {"nombres": sorted(core.completar_distrito("", {"nombres": []})['nombres'])}
+DISTRITOS = core.completar_distrito("", {"nombres": []})
 
 
 @map.route('/')

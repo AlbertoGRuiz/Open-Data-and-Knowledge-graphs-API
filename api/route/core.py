@@ -30,7 +30,7 @@ def completar_distrito(filtro, result):
 
     if response.status_code == 200:
         data = response.json()
-        nombres = [item['nombre']['value'].encode('latin-1').decode('utf-8') for item in data['results']['bindings']]
+        nombres = sorted([item['nombre']['value'] for item in data['results']['bindings']])
         print("Petición helios éxito")
         result['nombres'] = nombres
         return result
@@ -76,19 +76,13 @@ def buscar_locales(filtro, result):
 
         for item in data['results']['bindings']:
             latitud, longitud = utm_to_latlon(item['coordX']['value'], item['coordY']['value'])
-            if 'ã‘' in item['rotulo']['value']:
-                rotulo = item['rotulo']['value'].replace('ã‘','ñ')
-            elif 'Ã‘' in item['rotulo']['value']:
-                rotulo = item['rotulo']['value'].replace('Ã‘','Ñ')
-            else:
-                rotulo = item['rotulo']['value']
             local = {
                 "local": item['local']['value'],
                 "lat": str(latitud),
                 "long": str(longitud),
                 "horaCierre": item['horaCierre']['value'],
                 "horaApertura": item['horaApertura']['value'],
-                "rotulo": rotulo,
+                "rotulo": item['rotulo']['value'],
                 "situacion": item['situacion']['value'],
                 "mesas": item['mesas']['value'],
                 "sillas": item['sillas']['value'],

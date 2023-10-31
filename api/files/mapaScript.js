@@ -93,6 +93,7 @@ $(document).ready(function() {
 
                         marker.bindPopup(`
                             <strong>Local:</strong> ${result.rotulo} <br>
+                            <strong>Distrito:</strong> <a href="${result.sameAsNombreDistrito}" target="_blank">${selectedStreet}</a> <br>
                             <strong>Situación:</strong> ${result.situacion} <br>
                             <strong>Lat, long:</strong> ${result.lat},${result.long} <br>
                             <strong>HoraApertura:</strong> ${result.horaApertura} horas <br>

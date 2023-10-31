@@ -10,6 +10,7 @@ class LocalSchema(Schema):
     class Meta:
         # Fields to expose
         local = ["local"]
+        sameAsNombreDistrito = ["sameAsNombreDistrito"]
         lat = ["lat"]
         long = ["long"]
         horaCierre = ["horaCierre"]
@@ -21,6 +22,7 @@ class LocalSchema(Schema):
         superficie = ["superficie"]
 
     local = Str()
+    sameAsNombreDistrito = Str()
     lat = Str()
     long = Str()
     horaCierre = Str()

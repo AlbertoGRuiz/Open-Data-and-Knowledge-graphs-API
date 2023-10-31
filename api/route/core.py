@@ -45,10 +45,11 @@ def buscar_locales(filtro, result):
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX madridonc: <http://madridalfresco.es/lcc/ontology/locales#>
-    SELECT DISTINCT ?local ?coordX ?coordY ?horaCierre ?horaApertura ?rotulo ?situacion ?mesas ?sillas ?superficie
+    SELECT DISTINCT ?local ?coordX ?coordY ?horaCierre ?horaApertura ?rotulo ?situacion ?mesas ?sillas ?superficie ?sameAsNombreDistrito
         WHERE {{
             ?dist rdf:type madridonc:Distrito.
-            ?dist madridonc:nombreDistrito ?nombreDelDistrito.
+            ?dist madridonc:nombreDistrito ?nombreDelDistrito;
+                   madridonc:sameAsNombreDistrito ?sameAsNombreDistrito.
             ?local rdf:type madridonc:Local.
             ?local madridonc:perteneceADistrito ?dist;
                    madridonc:coordenadaX ?coordX;
@@ -78,6 +79,7 @@ def buscar_locales(filtro, result):
             latitud, longitud = utm_to_latlon(item['coordX']['value'], item['coordY']['value'])
             local = {
                 "local": item['local']['value'],
+                "sameAsNombreDistrito": item['sameAsNombreDistrito']['value'],
                 "lat": str(latitud),
                 "long": str(longitud),
                 "horaCierre": item['horaCierre']['value'],

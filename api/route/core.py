@@ -13,12 +13,13 @@ def completar_distrito(filtro, result):
     query = """
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX madridonc: <http://madridalfresco.es/lcc/ontology/locales#>
+    PREFIX esadm: <http://vocab.linkeddata.es/datosabiertos/def/sector-publico/territorio#>
+    PREFIX gn: <http://www.geonames.org/ontology#>
 
     SELECT DISTINCT ?nombre
             WHERE {{
-                ?dist rdf:type madridonc:Distrito.
-                ?dist madridonc:nombreDistrito ?nombre.
+                ?dist rdf:type esadm:Distrito.
+                ?dist gn:name ?nombre.
             }}
     """
 
@@ -45,23 +46,29 @@ def buscar_locales(filtro, result):
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX madridonc: <http://madridalfresco.es/lcc/ontology/locales#>
+    PREFIX esadm: <http://vocab.linkeddata.es/datosabiertos/def/sector-publico/territorio#>
+    PREFIX gn: <http://www.geonames.org/ontology#>
+    PREFIX escom: <http://vocab.linkeddata.es/datosabiertos/def/comercio/tejido-comercial#>
+    PREFIX coord: <http://purl.org/net/cartCoord#>
+    PREFIX gtfs: <http://vocab.gtfs.org/gtfs.ttl#>
+    
     SELECT DISTINCT ?local ?coordX ?coordY ?horaCierre ?horaApertura ?rotulo ?situacion ?mesas ?sillas ?superficie ?sameAsNombreDistrito
         WHERE {{
-            ?dist rdf:type madridonc:Distrito.
-            ?dist madridonc:nombreDistrito ?nombreDelDistrito;
+            ?dist rdf:type esadm:Distrito.
+            ?dist gn:name ?nombreDelDistrito;
                    madridonc:sameAsNombreDistrito ?sameAsNombreDistrito.
-            ?local rdf:type madridonc:Local.
-            ?local madridonc:perteneceADistrito ?dist;
-                   madridonc:coordenadaX ?coordX;
-                   madridonc:coordenadaY ?coordY;
-                   madridonc:horaCierre ?horaCierre;
-                   madridonc:horaApertura ?horaApertura;
-                   madridonc:tieneTerraza ?terraza;
-                   madridonc:rotulo ?rotulo;
-                   madridonc:situacion ?situacion.
-            ?terraza madridonc:mesas ?mesas;
-                    madridonc:sillas ?sillas;
-                    madridonc:superficie ?superficie.
+            ?local rdf:type escom:LocalComercial.
+            ?local esadm:distrito ?dist;
+                   coord:xcoord ?coordX;
+                   coord:ycoord ?coordY;
+                   gtfs:endTime ?horaCierre;
+                   gtfs:startTime ?horaApertura;
+                   escom:tieneTerraza ?terraza;
+                   escom:rotulo ?rotulo;
+                   escom:tipoSituacion ?situacion.
+            ?terraza escom:numeroMesasAutorizadas ?mesas;
+                    escom:numeroSillasAutorizadas ?sillas;
+                    escom:superficie ?superficie.
             FILTER(LCASE(?nombreDelDistrito) = "{}").
         }}""".format(str(filtro).lower())
 

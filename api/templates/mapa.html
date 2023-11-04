@@ -10,7 +10,6 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    <script src="{{ url_for('static', filename='files/mapaScript.js') }}"></script>
 </head>
 
 <body>
@@ -36,7 +35,8 @@
         <div id="correct-bar"></div>
     </div>
     <div id="map" class="mapa">
-        <div id="loading-bar"></div>
+        <div id="loading-bar" class="hidden"></div>
     </div>
 </body>
+<script src="{{ url_for('static', filename='files/mapaScript.js') }}"></script>
 </html>

@@ -71,8 +71,8 @@ $(document).ready(function() {
             return;
         }
         alert('Has seleccionado el distrito: ' + selectedStreet);
-        var loadingBar = $('#loading-bar');
-        loadingBar.css('display', 'block');
+        var loadingBar = document.getElementById('loading-bar');
+        loadingBar.classList.remove('hidden');
 
         // Vaciar el array de coordenadas
         markerCoords = [];
@@ -133,7 +133,8 @@ $(document).ready(function() {
                 // Centrar el mapa en la media de las coordenadas
                 map.setView([avgLat, avgLng], 13);
                 setTimeout(function() {
-                    $('#loading-bar').css('display', 'none');
+                    var loadingBar = document.getElementById('loading-bar');
+                    loadingBar.classList.add('hidden');
                     $('#correct-bar').css('display', 'block');
                     setTimeout(function() {
                         $('#correct-bar').css('display', 'none');

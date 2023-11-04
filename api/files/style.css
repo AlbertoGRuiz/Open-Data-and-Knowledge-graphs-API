@@ -67,13 +67,13 @@ body {
     max-width: 800px;
 }
 #loading-bar {
-    /* Posicionar el elemento en el centro de .mapa */
-    position: absolute;
+    /* Estilos para el contenedor del reloj de carga */
+    position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     transform-origin: center;
-
+  
     /* Estilos para el reloj de carga */
     border: 16px solid #000000;
     border-top: 16px solid #39db34;
@@ -82,12 +82,21 @@ body {
     height: 100px;
     animation: spin 2s linear infinite;
     z-index: 1000;
-    display: none;
-} /* Animación de rotación */
-@keyframes spin {
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+  }
+  
+  #loading-bar.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  /* Animación de rotación */
+  @keyframes spin {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
+  }
+  
 .modern-title {
     font-family: 'Montserrat', sans-serif;
     font-size: 2rem;

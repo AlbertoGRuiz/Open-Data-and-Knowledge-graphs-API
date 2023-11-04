@@ -32,10 +32,16 @@
                 </div>
             </div>
         </div> 
-        <div id="correct-bar"></div>
+        <div id="correct-bar" class="correct-bar hidden"></div>
     </div>
     <div id="map" class="mapa">
-        <div id="loading-bar" class="hidden"></div>
+        <div id="loading-bar" class="wrapper hidden">
+            <div class="black ball"></div>
+            <div class="red ball"></div>  
+            <div class="yellow ball"></div>  
+            <div class="green ball"></div>  
+            <p id="loading-text">Cargando...</p>
+          </div>
     </div>
 </body>
 <script src="{{ url_for('static', filename='files/mapaScript.js') }}"></script>

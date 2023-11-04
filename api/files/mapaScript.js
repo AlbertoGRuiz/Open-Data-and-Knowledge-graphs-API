@@ -72,11 +72,17 @@ $(document).ready(function() {
         }
         alert('Has seleccionado el distrito: ' + selectedStreet);
         var loadingBar = document.getElementById('loading-bar');
+        loadingBar.style.display = 'flex';
         loadingBar.classList.remove('hidden');
+        $('#search-box').css('display', 'none');
+        $('#autocomplete-select').css('display', 'none');
 
         // Vaciar el array de coordenadas
         markerCoords = [];
-
+        markersLayer.clearLayers();
+        map.setView([40.42, -3.7], 10);
+        var loadingText = document.querySelector('#loading-text');
+        loadingText.textContent = 'Cargando...';
         // Hacer una solicitud al servidor para obtener resultados de locales
         $.ajax({
             url: '/api/search/distrito/' + selectedStreet+ '/locales',
@@ -90,7 +96,6 @@ $(document).ready(function() {
                     if(result.lat < 43.75 && result.lat > 27.75 && result.long < 4.75 && result.long > -18.75){
                         // Crear un marcador en el mapa con las coordenadas
                         var marker = L.marker([result.lat, result.long]).addTo(markersLayer);
-
                         marker.bindPopup(`
                             <strong>Local:</strong> ${result.rotulo} <br>
                             <strong>Distrito:</strong> <a href="${result.sameAsNombreDistrito}" target="_blank">${selectedStreet}</a> <br>
@@ -122,7 +127,6 @@ $(document).ready(function() {
                         });
                     }
                 });
-
                 // Calcular la media de las coordenadas de los marcadores
                 var avgLat = markerCoords.reduce(function(sum, coord) {
                     return sum + coord[0];
@@ -131,15 +135,26 @@ $(document).ready(function() {
                     return sum + coord[1];
                 }, 0) / markerCoords.length;
                 // Centrar el mapa en la media de las coordenadas
+                // Supongamos que este código se ejecuta después de que el distrito haya cargado
+                loadingText.textContent = 'Ha cargado el distrito ' + selectedStreet;
                 map.setView([avgLat, avgLng], 13);
                 setTimeout(function() {
-                    var loadingBar = document.getElementById('loading-bar');
-                    loadingBar.classList.add('hidden');
                     $('#correct-bar').css('display', 'block');
+                    $('#correct-bar').css('animation', 'none');
+                    $('#autocomplete-select').css('display', 'block');
+                    $('#search-box').css('display', 'block');
                     setTimeout(function() {
-                        $('#correct-bar').css('display', 'none');
-                    }, 5000);
-                }, 2000);
+                        var loadingBar = document.getElementById('loading-bar');
+                        loadingBar.classList.add('hidden');
+                        setTimeout(function() {
+                            $('#correct-bar').css('animation', 'fadeOut 1s forwards');
+                            setTimeout(function() {
+                                $('#correct-bar').css('display', 'none');
+                                loadingText.textContent = 'Cargando...';
+                            }, 1000);
+                        }, 5000);
+                    }, 1000);
+                }, 1000);
 
             },
             error: function() {

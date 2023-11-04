@@ -37,6 +37,7 @@ body {
     width: 40px;
     height: 20px;
     display: none;
+    animation: fadeOut 1s forwards;
 }
 #title {
     display: flex;
@@ -66,37 +67,74 @@ body {
     width: 80%; 
     max-width: 800px;
 }
-#loading-bar {
-    /* Estilos para el contenedor del reloj de carga */
+
+
+.wrapper {
     position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transform-origin: center;
-  
-    /* Estilos para el reloj de carga */
-    border: 16px solid #000000;
-    border-top: 16px solid #39db34;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    animation: spin 2s linear infinite;
+    display: flex;
+    /*flex-direction: column;*/
+    justify-content: center;
+    align-items: center;
+    top: 45%;
+    left: 52%;
     z-index: 1000;
-    opacity: 1;
-    transition: opacity 0.5s ease-out;
-  }
-  
-  #loading-bar.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-  
-  /* Animación de rotación */
-  @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-  }
-  
+    transform: translate(-50%, -50%);
+}
+.wrapper.hidden {
+    animation: fadeOut 1s forwards;
+    display: none;
+}
+.ball {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    margin: 0 10px;
+    animation: 2s bounce ease infinite;
+}
+.black {
+    background-color: #000000;
+}
+.red {
+    background-color: #EA4436;
+    animation-delay: .2s;
+}
+.yellow {
+    background-color: #FBBD06;
+    animation-delay: .4s;
+}
+.green {
+    background-color: #34A952;
+    animation-delay: .6s;
+}
+@keyframes bounce {  
+    25% {
+        transform: translateX(+300%);
+    }
+    50% {
+        transform: translateX(-300%);
+    }
+    75% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+#loading-text {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    color: #000000;
+    font-weight: bold;
+}
+
 .modern-title {
     font-family: 'Montserrat', sans-serif;
     font-size: 2rem;

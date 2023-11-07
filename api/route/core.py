@@ -10,18 +10,33 @@ URL_HELIOS = "http://localhost:9000/api/sparql"
 
 
 def completar_distrito(filtro, result):
-    query = """
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX esadm: <http://vocab.linkeddata.es/datosabiertos/def/sector-publico/territorio#>
-    PREFIX gn: <http://www.geonames.org/ontology#>
+    if filtro == 'default':
+        query = """
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX esadm: <http://vocab.linkeddata.es/datosabiertos/def/sector-publico/territorio#>
+            PREFIX gn: <http://www.geonames.org/ontology#>
 
-    SELECT DISTINCT ?nombre
-            WHERE {{
-                ?dist rdf:type esadm:Distrito.
-                ?dist gn:name ?nombre.
-            }}
-    """
+            SELECT DISTINCT ?nombre
+                    WHERE {{
+                        ?dist rdf:type esadm:Distrito.
+                        ?dist gn:name ?nombre.
+                    }} ORDER BY ?nombre
+            """
+    else:
+        query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX esadm: <http://vocab.linkeddata.es/datosabiertos/def/sector-publico/territorio#>
+        PREFIX gn: <http://www.geonames.org/ontology#>
+    
+        SELECT DISTINCT ?nombre
+                WHERE {{
+                    ?dist rdf:type esadm:Distrito.
+                    ?dist gn:name ?nombre.
+                    FILTER(STRSTARTS(LCASE(?nombre), "{}")).
+                }} ORDER BY ?nombre
+        """.format(filtro)
 
     params = {
         "query": query
@@ -31,9 +46,8 @@ def completar_distrito(filtro, result):
 
     if response.status_code == 200:
         data = response.json()
-        nombres = sorted([item['nombre']['value'] for item in data['results']['bindings']])
+        result['nombres'] = [item['nombre']['value'] for item in data['results']['bindings']]
         print("Petición helios éxito")
-        result['nombres'] = nombres
         return result
     else:
         # Si la solicitud no se completó con éxito, muestra el código de estado

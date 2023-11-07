@@ -7,10 +7,11 @@ from unidecode import unidecode
 
 from api.schema.distrito_schema import DistritoSchema
 from api.schema.locales_schema import LocalesSchema
+from api.schema.error_schema import ErrorSchema
 
 home_api = Blueprint('api', __name__)
 map = Blueprint('/', __name__)
-DISTRITOS = core.completar_distrito("", {"nombres": []})
+DISTRITOS = core.completar_distrito("default", {"nombres": []})
 
 
 @map.route('/')
@@ -23,15 +24,19 @@ def mostrar_mapa():
     'parameters': [{
         "name": "filtro",
         "in": "path",
-        "description": "district to be filtered among districts",
+        "description": "district to be filtered among districts. To get all districts use default.",
         "type": "string",
         "required": False,
-        "default": "hortaleza"
+        "default": "default"
     }],
     'responses': {
         HTTPStatus.OK.value: {
             'description': 'List of coincidences',
             'schema': DistritoSchema
+        },
+        HTTPStatus.NOT_FOUND.value: {
+            'description': 'Error while calling with a non string',
+            'schema': ErrorSchema
         }
     }
 })
@@ -52,7 +57,7 @@ def autocomplete_distrito(filtro):
             filtro = ''
 
         if filtro == '':
-            return DistritoSchema().dump({[]}), 200
+            return ErrorSchema().dump({}), 404
         print("El filtro es {}".format(str(filtro)))
 
         result = {"nombres": []}
@@ -77,15 +82,19 @@ def autocomplete_distrito(filtro):
     'parameters': [{
         "name": "filtro",
         "in": "path",
-        "description": "restaurants to be filtered among a district",
+        "description": "restaurants to be filtered among a district. The name should be equal to a district name.",
         "type": "string",
         "required": False,
-        "default": "madrid"
+        "default": "Latina"
     }],
     'responses': {
         HTTPStatus.OK.value: {
             'description': 'List of coincidences',
             'schema': LocalesSchema
+        },
+        HTTPStatus.NOT_FOUND.value: {
+            'description': 'Error while calling with a non string or not valid district',
+            'schema': ErrorSchema
         }
     }
 })
@@ -104,8 +113,8 @@ def search_locales(filtro):
         else:
             filtro = ''
 
-        if filtro == '':
-            return DistritoSchema().dump({[]}), 200
+        if filtro == '' or filtro not in DISTRITOS['nombres']:
+            return ErrorSchema().dump({}), 404
 
         print("El filtro es {}".format(str(filtro)))
 

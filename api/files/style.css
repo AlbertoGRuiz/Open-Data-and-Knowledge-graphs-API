@@ -133,6 +133,15 @@ body {
     font-size: 2rem;
     color: #000000;
     font-weight: bold;
+    animation: shine 2s infinite;
+}
+@keyframes shine {
+    0%, 100% {
+        text-shadow: 0 0 10px #000000;
+    }
+    50% {
+        text-shadow: 0 0 20px #ffffff, 0 0 30px #000000, 0 0 40px #ffffff,0 50px #8d8d8d;;
+    }
 }
 
 .modern-title {

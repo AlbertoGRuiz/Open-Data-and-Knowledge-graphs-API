@@ -64,6 +64,8 @@ $(document).ready(function() {
 
     });
 
+    
+
     // Manejar clic en resultado de autocompletado
     $('#autocomplete-select').on('change', 'select', function() {
         var selectedStreet = $(this).find('option:selected').text();
@@ -83,6 +85,7 @@ $(document).ready(function() {
         map.setView([40.42, -3.7], 10);
         var loadingText = document.querySelector('#loading-text');
         loadingText.textContent = 'Cargando...';
+
         // Hacer una solicitud al servidor para obtener resultados de locales
         $.ajax({
             url: '/api/search/distrito/' + selectedStreet+ '/locales',
@@ -92,6 +95,29 @@ $(document).ready(function() {
                 // Recorrer los resultados devueltos por el servidor
                 // Borrar marcadores anteriores
                 markersLayer.clearLayers();
+                
+                // Hacer una solicitud al servidor para obtener resultados de imagen de distrito
+                var img = "";
+                var wikidataUrl = data.locales[0].sameAsNombreDistrito;
+                var entityId = wikidataUrl.split('/').pop();
+                var apiUrl = 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids=' + entityId + '&props=claims&format=json&origin=*';
+                fetch(apiUrl).then(response => response.json()).then(data => {
+                        // Extrae la imagen de los datos
+                        var imageClaim = data.entities[entityId].claims.P18;
+                        if (imageClaim) {
+                            var imageFileName = imageClaim[0].mainsnak.datavalue.value;
+                            var imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(imageFileName);
+                            // Crea un elemento img
+                            img = document.createElement('img');
+                            img.src = imageUrl;
+                            img.style.position = 'absolute';
+                            img.style.width = '10%'; // Ajusta el tamaño de la imagen según tus necesidades
+                            img.style.display = 'none';
+                            img.style.zIndex = 5000;
+                            document.body.appendChild(img);
+                        }
+                    });
+
                 data.locales.forEach(function(result) {
                     if(result.lat < 43.75 && result.lat > 27.75 && result.long < 4.75 && result.long > -18.75){
                         // Crear un marcador en el mapa con las coordenadas
@@ -109,7 +135,22 @@ $(document).ready(function() {
                                 <li><strong>mesas:</strong> ${result.mesas}</li>
                                 <li><strong>superficie:</strong> ${result.superficie} m<sup>2</sup></li>
                             </ul>
-                        `);
+                        `).on('popupopen', function() {
+                            var link = document.querySelector('.leaflet-popup-content a');
+                        
+                            // Muestra la imagen cuando el ratón se coloca sobre el enlace
+                            link.addEventListener('mouseover', function(event) {
+                                img.style.display = 'block';
+                                img.style.left = (event.pageX+15) + 'px';
+                                img.style.top = (event.pageY+15) + 'px';
+                            });
+                        
+                            // Oculta la imagen cuando el ratón se aleja del enlace
+                            link.addEventListener('mouseout', function() {
+                                img.style.display = 'none';
+                            });
+                        });
+
                         var autocompleteResults = $('#autocomplete-results');
                         autocompleteResults.empty();
                         // Añadir las coordenadas del marcador al array

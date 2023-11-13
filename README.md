@@ -20,6 +20,7 @@ The API has the following structure:
  ┃ ┃ ┗ 📜home.py
  ┃ ┣ 📂schema
  ┃ ┃ ┣ 📜distrito_schema.py
+ ┃ ┃ ┣ 📜error_schema.py
  ┃ ┃ ┣ 📜local_schema.py
  ┃ ┃ ┗ 📜locales_schema.py
  ┃ ┗ 📂templates
